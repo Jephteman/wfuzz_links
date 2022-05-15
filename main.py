@@ -14,7 +14,7 @@ def chrono():
 	time=time.localtime()
 	t=((((((((time.tm_year*365)+time.ydays)*24)+time.hour)*60)+time.tm_min)*60)+time.tm_sec)
 	return t
-print(chrono)
+
 
 def start(parser):
 	cible=parser.url
@@ -23,6 +23,9 @@ def start(parser):
 	if fichier.name == '<stdout>':
 		fichier_Q='N'
 	count=parser.c
+        temps=(chrono())+parser.t
+        if type(temps) != type(None):
+                stop=chrono()
 	print(' Nous commmencons ')
 	deja_visiter=[]
 	try:
@@ -42,8 +45,11 @@ def start(parser):
 					print(n,trouver[0])
 					if type(count) != type(None):
 						if n == count:
-							exit()
-					
+					                exit()
+                                        if type(temps) != type(None):
+                                                if temps <= stop:
+                                                        exit()
+				        fi	
 					n+=1
 					del trouver[0]
 					try:
@@ -88,4 +94,5 @@ if __name__ == '__main__':
 		'-v' ,default='', help='Affiche la version'
 	)
 	args = parser.parse_args()
-    
+        start(args)
+        
