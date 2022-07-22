@@ -16,20 +16,22 @@ def chrono(): #
 	return t
 
 def start(parser):
-	cible=parser.url
+	u=parser.url
+	cible=sf.racine(parser.url)
 	if sf.verif(parser.url) != True:
 		cible=sf.verif(parser.url)
-	
 	if type(parser.u) != type(None):
 		def f():
 			return parser.u
 		sf.rq.utils.default_user_agent=f
 
 	if type(parser.p) != type(None):
-		if cible[0:5] == 'https':
+		if cible[0:8] == 'https://':
 			sf.rq.utils.DEFAULT_PORTS['https']=parser.p
-		else:
+		elif cible[0:7] == 'http://':
 			sf.rq.utils.DEFAULT_PORTS['http']=parser.p
+		else:
+			raise Exception('Protocole non pris en charge :{}'.format(cible))
 	
 	fichier=parser.o
 	fichier_Q=''
@@ -45,13 +47,15 @@ def start(parser):
 	
 	if type(parser.w) == type(None):
 		try:
-			
 			trouver=sf.search_links(cible)
+			trouver.append(u)
+			print(trouver)
 			while len(trouver) != 0:
 				if type(parser.c) != type(None):
 					if count == n:
 						exit(0)
 				if sf.compare(str(cible),str(sf.racine(trouver[0]))) is True:
+					
 					if trouver[0] not in deja_visiter:
 						x=sf.search_links(trouver[0])
 						if fichier_Q == 'O':
@@ -73,9 +77,9 @@ def start(parser):
 					del trouver[0]
 		except KeyboardInterrupt:
 			print('bye, bye !')
+		
 		except TypeError:
 			print('Aucun resultants')
-		print(truver)
 
 	elif type(parser.w) == type(sys.stdin):
 		i=0
@@ -104,8 +108,6 @@ def start(parser):
 		except KeyboardInterrupt:
 			print('bye, bye !')
 
-				
-	
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
